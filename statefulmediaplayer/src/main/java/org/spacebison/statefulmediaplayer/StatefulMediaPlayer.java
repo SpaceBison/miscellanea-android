@@ -19,10 +19,20 @@ import java.util.Map;
 import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.*;
 
 /**
- * A {@link MediaPlayer} subclass that keeps track of its state, which can be checked with {@link #getState()}.
- * <p/>
+ * A {@link MediaPlayer} extension that keeps track of its state.
  * <p>
- * This is partially based on <a href=https://gist.github.com/danielhawkes/1029568>danielhawkes' gist</a>
+ *     {@link StatefulMediaPlayer} wraps all of {@link MediaPlayer}'s state-dependant methods, so
+ *     that they are never called in an invalid state. The current state can also be checked
+ *     using {@link StatefulMediaPlayer#getState()}.
+ * </p>
+ * <p>
+ *     Replacements for listener setters are provided.
+ *     listener calls pass a {@link StatefulMediaPlayer} reference for convenience. In case of
+ *     {@link OnInfoListener} and {@link OnErrorListener}, error codes and info codes are translated
+ *     to {@link MediaError} and {@link MediaInfo} enums. Note that the methods marked
+ * </p>
+ * <p>
+ *     This class was inspired by <a href=https://gist.github.com/danielhawkes/1029568>danielhawkes' gist</a>
  * </p>
  */
 @SuppressWarnings("unused")
@@ -393,7 +403,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     * @deprecated use {@link StatefulMediaPlayer#setOnPreparedListener(OnPreparedListener)} instead.
+     * @deprecated Use {@link StatefulMediaPlayer#setOnPreparedListener(OnPreparedListener)} instead.
      */
     @Override
     @Deprecated
@@ -402,7 +412,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     *
+     * @deprecated Use {@link StatefulMediaPlayer#setOnCompletionListener(OnCompletionListener)} instead;
      */
     @Override
     @Deprecated
@@ -411,7 +421,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     * @deprecated use {@link StatefulMediaPlayer#setOnPreparedListener(OnPreparedListener)} instead.
+     * @deprecated Use {@link StatefulMediaPlayer#setOnPreparedListener(OnPreparedListener)} instead.
      */
     @Override
     @Deprecated
@@ -420,7 +430,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     * @deprecated use {@link StatefulMediaPlayer#setOnSeekCompleteListener(OnSeekCompleteListener)} instead.
+     * @deprecated Use {@link StatefulMediaPlayer#setOnSeekCompleteListener(OnSeekCompleteListener)} instead.
      */
     @Override
     @Deprecated
@@ -429,7 +439,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     * @deprecated use {@link StatefulMediaPlayer#setOnVideoSizeChangedListener(OnVideoSizeChangedListener)} instead.
+     * @deprecated Use {@link StatefulMediaPlayer#setOnVideoSizeChangedListener(OnVideoSizeChangedListener)} instead.
      */
     @Override
     @Deprecated
@@ -438,7 +448,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     * @deprecated use {@link StatefulMediaPlayer#setOnTimedTextListener(OnTimedTextListener)} instead.
+     * @deprecated Use {@link StatefulMediaPlayer#setOnTimedTextListener(OnTimedTextListener)} instead.
      */
     @Override
     @Deprecated
@@ -447,7 +457,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     * @deprecated use {@link StatefulMediaPlayer#setOnTimedMetaDataAvailableListener(OnTimedMetaDataAvailableListener)}} instead.
+     * @deprecated Use {@link StatefulMediaPlayer#setOnTimedMetaDataAvailableListener(OnTimedMetaDataAvailableListener)}} instead.
      */
     @Override
     @Deprecated
@@ -456,7 +466,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     * @deprecated use {@link StatefulMediaPlayer#setOnErrorListener(OnErrorListener)} instead.
+     * @deprecated Use {@link StatefulMediaPlayer#setOnErrorListener(OnErrorListener)} instead.
      */
     @Override
     @Deprecated
@@ -465,13 +475,14 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     * @deprecated use {@link StatefulMediaPlayer#setOnInfoListener(OnInfoListener)} instead.
+     * @deprecated Use {@link StatefulMediaPlayer#setOnInfoListener(OnInfoListener)} instead.
      */
     @Override
     @Deprecated
     public void setOnInfoListener(MediaPlayer.OnInfoListener listener) {
         super.setOnInfoListener(listener);
     }
+
 
     public void setOnStateChangedListener(OnStateChangedListener onStateChangedListener) {
         mOnStateChangedListener = onStateChangedListener;
@@ -527,8 +538,8 @@ public class StatefulMediaPlayer extends MediaPlayer {
     /**
      * MediaPlayer states.
      * <p>
-     * For details, check out the
-     * <a href=http://developer.android.com/reference/android/media/MediaPlayer.html#StateDiagram>MediaPlayer state diagram</a>.
+     *    For details, check out the
+     *    <a href=http://developer.android.com/reference/android/media/MediaPlayer.html#StateDiagram>MediaPlayer state diagram</a>.
      * </p>
      */
     public enum State {
