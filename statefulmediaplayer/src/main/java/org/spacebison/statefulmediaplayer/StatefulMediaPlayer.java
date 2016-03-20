@@ -1,6 +1,5 @@
 package org.spacebison.statefulmediaplayer;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.AudioAttributes;
@@ -87,7 +86,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_VIDEO_SCALING_MODE.contains(mState)) {
             super.setVideoScalingMode(mode);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -97,7 +96,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(context, uri);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -107,7 +106,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(context, uri, headers);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -117,7 +116,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(path);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -127,7 +126,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(fd);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -137,7 +136,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(fd, offset, length);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -147,7 +146,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(dataSource);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -157,7 +156,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.prepare();
             setState(PREPARED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -167,7 +166,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.prepareAsync();
             setState(PREPARING);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -177,7 +176,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.start();
             setState(STARTED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -187,7 +186,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.stop();
             setState(STOPPED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -197,7 +196,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.pause();
             setState(PAUSED);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -206,7 +205,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_VIDEO_WIDTH.contains(mState)) {
             return super.getVideoWidth();
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -215,7 +214,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_VIDEO_HEIGHT.contains(mState)) {
             return super.getVideoHeight();
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -224,7 +223,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.IS_PLAYING.contains(mState)) {
             return super.isPlaying();
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -233,7 +232,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SEEK_TO.contains(mState)) {
             super.seekTo(msec);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -242,7 +241,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_CURRENT_POSITION.contains(mState)) {
             return super.getCurrentPosition();
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -251,7 +250,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_DURATION.contains(mState)) {
             return super.getDuration();
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -281,7 +280,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.reset();
             setState(IDLE);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -290,7 +289,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_AUDIO_STREAM_TYPE.contains(mState)) {
             super.setAudioStreamType(streamtype);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -299,7 +298,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_AUDIO_ATTRIBUTES.contains(mState)) {
             super.setAudioAttributes(attributes);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -308,7 +307,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_LOOPING.contains(mState)) {
             super.setLooping(looping);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -317,7 +316,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_VOLUME.contains(mState)) {
             super.setVolume(leftVolume, rightVolume);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -326,7 +325,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_AUDIO_SESSION_ID.contains(mState)) {
             super.setAudioSessionId(sessionId);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -335,7 +334,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ATTACH_AUX_EFFECT.contains(mState)) {
             super.attachAuxEffect(effectId);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -344,7 +343,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_TRACK_INFO.contains(mState)) {
             return super.getTrackInfo();
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -353,7 +352,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ADD_TIMED_TEXT_SOURCE.contains(mState)) {
             super.addTimedTextSource(path, mimeType);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -362,7 +361,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ADD_TIMED_TEXT_SOURCE.contains(mState)) {
             super.addTimedTextSource(context, uri, mimeType);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -371,7 +370,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ADD_TIMED_TEXT_SOURCE.contains(mState)) {
             super.addTimedTextSource(fd, mimeType);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -380,7 +379,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ADD_TIMED_TEXT_SOURCE.contains(mState)) {
             super.addTimedTextSource(fd, offset, length, mime);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -389,7 +388,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SELECT_TRACK.contains(mState)) {
             super.selectTrack(index);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -398,7 +397,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.DESELECT_TRACK.contains(mState)) {
             super.deselectTrack(index);
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("State: " + mState);
         }
     }
 
@@ -556,154 +555,6 @@ public class StatefulMediaPlayer extends MediaPlayer {
     }
 
     /**
-     * MediaPlayer error codes.
-     */
-    @SuppressLint("InlinedApi")
-    public enum MediaError {
-        /**
-         * {@link MediaPlayer#MEDIA_ERROR_IO}
-         */
-        IO(MEDIA_ERROR_IO),
-        /**
-         * {@link MediaPlayer#MEDIA_ERROR_MALFORMED}
-         */
-        MALFORMED(MEDIA_ERROR_MALFORMED),
-        /**
-         * {@link MediaPlayer#MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK
-         **/
-        NOT_VALID_FOR_PROGRESSIVE_PLAYBACK(MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK),
-        /**
-         * {@link MediaPlayer#MEDIA_ERROR_SERVER_DIED}
-         */
-        SERVER_DIED(MEDIA_ERROR_SERVER_DIED),
-        /**
-         * {@link MediaPlayer#MEDIA_ERROR_TIMED_OUT}
-         */
-        TIMED_OUT(MEDIA_ERROR_TIMED_OUT),
-        /**
-         * {@link MediaPlayer#MEDIA_ERROR_UNKNOWN}
-         */
-        UNKNOWN(MEDIA_ERROR_UNKNOWN),
-        /**
-         * {@link MediaPlayer#MEDIA_ERROR_UNSUPPORTED}
-         */
-        UNSUPPORTED(MEDIA_ERROR_UNSUPPORTED);
-
-        private final int mErrorCode;
-
-        MediaError(int errorCode) {
-            mErrorCode = errorCode;
-        }
-
-        public static MediaError fromCode(int errorCode) {
-            switch (errorCode) {
-                case MEDIA_ERROR_IO:
-                    return IO;
-                case MEDIA_ERROR_MALFORMED:
-                    return MALFORMED;
-                case MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
-                    return NOT_VALID_FOR_PROGRESSIVE_PLAYBACK;
-                case MEDIA_ERROR_SERVER_DIED:
-                    return SERVER_DIED;
-                case MEDIA_ERROR_TIMED_OUT:
-                    return TIMED_OUT;
-                case MEDIA_ERROR_UNSUPPORTED:
-                    return UNSUPPORTED;
-                case MEDIA_ERROR_UNKNOWN:
-                default:
-                    return UNKNOWN;
-            }
-        }
-
-        public int getErrorCode() {
-            return mErrorCode;
-        }
-    }
-
-    /**
-     * MediaPlayer info codes;
-     */
-    @SuppressLint("InlinedApi")
-    public enum MediaInfo {
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_BAD_INTERLEAVING}
-         **/
-        BAD_INTERLEAVING(MEDIA_INFO_BAD_INTERLEAVING),
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_BUFFERING_END}
-         **/
-        BUFFERING_END(MEDIA_INFO_BUFFERING_END),
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_BUFFERING_START}
-         **/
-        BUFFERING_START(MEDIA_INFO_BUFFERING_START),
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_METADATA_UPDATE}
-         **/
-        METADATA_UPDATE(MEDIA_INFO_METADATA_UPDATE),
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_NOT_SEEKABLE}
-         **/
-        NOT_SEEKABLE(MEDIA_INFO_NOT_SEEKABLE),
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_SUBTITLE_TIMED_OUT}
-         **/
-        SUBTITLE_TIMED_OUT(MEDIA_INFO_SUBTITLE_TIMED_OUT),
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_UNKNOWN}
-         **/
-        UNKNOWN(MEDIA_INFO_UNKNOWN),
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_UNSUPPORTED_SUBTITLE}
-         **/
-        UNSUPPORTED_SUBTITLE(MEDIA_INFO_UNSUPPORTED_SUBTITLE),
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_VIDEO_RENDERING_START}
-         **/
-        VIDEO_RENDERING_START(MEDIA_INFO_VIDEO_RENDERING_START),
-        /**
-         * {@link MediaPlayer#MEDIA_INFO_VIDEO_TRACK_LAGGING}
-         **/
-        VIDEO_TRACK_LAGGING(MEDIA_INFO_VIDEO_TRACK_LAGGING);
-
-        private final int mInfoCode;
-
-        MediaInfo(int infoCode) {
-            mInfoCode = infoCode;
-        }
-
-        public static MediaInfo fromCode(int infoCode) {
-            switch (infoCode) {
-                case MEDIA_INFO_BAD_INTERLEAVING:
-                    return BAD_INTERLEAVING;
-                case MEDIA_INFO_BUFFERING_END:
-                    return BUFFERING_END;
-                case MEDIA_INFO_BUFFERING_START:
-                    return BUFFERING_START;
-                case MEDIA_INFO_METADATA_UPDATE:
-                    return METADATA_UPDATE;
-                case MEDIA_INFO_NOT_SEEKABLE:
-                    return NOT_SEEKABLE;
-                case MEDIA_INFO_SUBTITLE_TIMED_OUT:
-                    return SUBTITLE_TIMED_OUT;
-                case MEDIA_INFO_UNSUPPORTED_SUBTITLE:
-                    return UNSUPPORTED_SUBTITLE;
-                case MEDIA_INFO_VIDEO_RENDERING_START:
-                    return VIDEO_RENDERING_START;
-                case MEDIA_INFO_VIDEO_TRACK_LAGGING:
-                    return VIDEO_TRACK_LAGGING;
-                case MEDIA_INFO_UNKNOWN:
-                default:
-                    return UNKNOWN;
-            }
-        }
-
-        public int getInfoCode() {
-            return mInfoCode;
-        }
-    }
-
-    /**
      * Valid state sets for each of MediaPlayer's methods.
      * <p/>
      * <p>
@@ -713,23 +564,23 @@ public class StatefulMediaPlayer extends MediaPlayer {
      */
     private enum MethodStates {
         ATTACH_AUX_EFFECT(EnumSet.of(INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
-        GET_CURRENT_POSITION(EnumSet.of(STARTED, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
+        GET_CURRENT_POSITION(EnumSet.of(IDLE, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
         GET_DURATION(EnumSet.of(PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
-        GET_VIDEO_HEIGHT(EnumSet.of(STARTED, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
-        GET_VIDEO_WIDTH(EnumSet.of(STARTED, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
-        IS_PLAYING(EnumSet.of(STARTED, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
+        GET_VIDEO_HEIGHT(EnumSet.of(IDLE, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
+        GET_VIDEO_WIDTH(EnumSet.of(IDLE, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
+        IS_PLAYING(EnumSet.of(IDLE, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
         PAUSE(EnumSet.of(STARTED, PAUSED, PLAYBACK_COMPLETED)),
         PREPARE(EnumSet.of(INITIALIZED, STOPPED)),
         PREPARE_ASYNC(EnumSet.of(INITIALIZED, STOPPED)),
-        RESET(EnumSet.of(STARTED, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED, ERROR)),
+        RESET(EnumSet.of(IDLE, INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED, ERROR)),
         SEEK_TO(EnumSet.of(PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
-        SET_AUDIO_ATTRIBUTES(EnumSet.of(STARTED, INITIALIZED, STOPPED, PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
-        SET_AUDIO_SESSION_ID(EnumSet.of(STARTED)),
-        SET_AUDIO_STREAM_TYPE(EnumSet.of(STARTED, INITIALIZED, STOPPED, PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
-        SET_DATA_SOURCE(EnumSet.of(STARTED)),
+        SET_AUDIO_ATTRIBUTES(EnumSet.of(IDLE, INITIALIZED, STOPPED, PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
+        SET_AUDIO_SESSION_ID(EnumSet.of(IDLE)),
+        SET_AUDIO_STREAM_TYPE(EnumSet.of(IDLE, INITIALIZED, STOPPED, PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
+        SET_DATA_SOURCE(EnumSet.of(IDLE)),
         SET_VIDEO_SCALING_MODE(EnumSet.of(INITIALIZED, PREPARED, STARTED, PAUSED, STOPPED, PLAYBACK_COMPLETED)),
-        SET_LOOPING(EnumSet.of(STARTED, INITIALIZED, STOPPED, PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
-         SET_VOLUME(EnumSet.of(STARTED, INITIALIZED, STOPPED, PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
+        SET_LOOPING(EnumSet.of(IDLE, INITIALIZED, STOPPED, PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
+        SET_VOLUME(EnumSet.of(IDLE, INITIALIZED, STOPPED, PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
         START(EnumSet.of(PREPARED, STARTED, PAUSED, PLAYBACK_COMPLETED)),
         STOP(EnumSet.of(PREPARED, STARTED, STOPPED, PAUSED, PLAYBACK_COMPLETED)),
         GET_TRACK_INFO(EnumSet.of(PREPARED, STARTED, STOPPED, PAUSED, PLAYBACK_COMPLETED)),
