@@ -49,6 +49,10 @@ import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.STOPP
 @SuppressWarnings("unused")
 public class StatefulMediaPlayer extends MediaPlayer {
     private static final String TAG = "StatefulMediaPlayer";
+    private final MediaPlayerListener mListener = new MediaPlayerListener();
+    private final MediaPlayerCupcakeListener mCupcakeListener;
+    private final MediaPlayerJellyBeanListener mJellyBeanListener;
+    private final MediaPlayerMarshmallowListener mMarshmallowListener;
     private State mState;
     private OnStateChangedListener mOnStateChangedListener;
     private OnBufferingUpdateListener mOnBufferingUpdateListener;
@@ -63,28 +67,34 @@ public class StatefulMediaPlayer extends MediaPlayer {
 
     @SuppressWarnings("deprecation")
     public StatefulMediaPlayer() {
-        final MediaPlayerListener listener = new MediaPlayerListener();
-        setOnBufferingUpdateListener(listener);
-        setOnCompletionListener(listener);
-        setOnErrorListener(listener);
-        setOnPreparedListener(listener);
-        setOnSeekCompleteListener(listener);
+        setOnBufferingUpdateListener(mListener);
+        setOnCompletionListener(mListener);
+        setOnErrorListener(mListener);
+        setOnPreparedListener(mListener);
+        setOnSeekCompleteListener(mListener);
+
+        MediaPlayerCupcakeListener cupcakeListener = null;
+        MediaPlayerJellyBeanListener jellyBeanListener = null;
+        MediaPlayerMarshmallowListener marshmallowListener = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
-            MediaPlayerCupcakeListener cupcakeListener = new MediaPlayerCupcakeListener();
+            cupcakeListener = new MediaPlayerCupcakeListener();
             setOnInfoListener(cupcakeListener);
             setOnVideoSizeChangedListener(cupcakeListener);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                MediaPlayerJellyBeanListener jellyBeanListener = new MediaPlayerJellyBeanListener();
+                jellyBeanListener = new MediaPlayerJellyBeanListener();
                 setOnTimedTextListener(jellyBeanListener);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    MediaPlayerMarshmallowListener marshmallowListener = new MediaPlayerMarshmallowListener();
+                    marshmallowListener = new MediaPlayerMarshmallowListener();
                     setOnTimedMetaDataAvailableListener(marshmallowListener);
                 }
             }
         }
+        mCupcakeListener = cupcakeListener;
+        mJellyBeanListener = jellyBeanListener;
+        mMarshmallowListener = marshmallowListener;
 
         setState(IDLE);
     }
@@ -515,8 +525,14 @@ public class StatefulMediaPlayer extends MediaPlayer {
      */
     @Override
     @Deprecated
-    public void setOnPreparedListener(MediaPlayer.OnPreparedListener listener) {
-        super.setOnPreparedListener(listener);
+    public void setOnPreparedListener(final MediaPlayer.OnPreparedListener listener) {
+        super.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mListener.onPrepared(mp);
+                listener.onPrepared(mp);
+            }
+        });
     }
 
     /**
@@ -524,8 +540,14 @@ public class StatefulMediaPlayer extends MediaPlayer {
      */
     @Override
     @Deprecated
-    public void setOnCompletionListener(MediaPlayer.OnCompletionListener listener) {
-        super.setOnCompletionListener(listener);
+    public void setOnCompletionListener(final MediaPlayer.OnCompletionListener listener) {
+        super.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mListener.onCompletion(mp);
+                listener.onCompletion(mp);
+            }
+        });
     }
 
     /**
@@ -533,8 +555,14 @@ public class StatefulMediaPlayer extends MediaPlayer {
      */
     @Override
     @Deprecated
-    public void setOnBufferingUpdateListener(MediaPlayer.OnBufferingUpdateListener listener) {
-        super.setOnBufferingUpdateListener(listener);
+    public void setOnBufferingUpdateListener(final MediaPlayer.OnBufferingUpdateListener listener) {
+        super.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+            @Override
+            public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                mListener.onBufferingUpdate(mp, percent);
+                listener.onBufferingUpdate(mp, percent);
+            }
+        });
     }
 
     /**
@@ -542,35 +570,74 @@ public class StatefulMediaPlayer extends MediaPlayer {
      */
     @Override
     @Deprecated
-    public void setOnSeekCompleteListener(MediaPlayer.OnSeekCompleteListener listener) {
-        super.setOnSeekCompleteListener(listener);
+    public void setOnSeekCompleteListener(final MediaPlayer.OnSeekCompleteListener listener) {
+        super.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(MediaPlayer mp) {
+                mListener.onSeekComplete(mp);
+                listener.onSeekComplete(mp);
+            }
+        });
     }
 
     /**
      * @deprecated Use {@link StatefulMediaPlayer#setOnVideoSizeChangedListener(OnVideoSizeChangedListener)} instead.
      */
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     @Override
     @Deprecated
-    public void setOnVideoSizeChangedListener(MediaPlayer.OnVideoSizeChangedListener listener) {
-        super.setOnVideoSizeChangedListener(listener);
+    public void setOnVideoSizeChangedListener(final MediaPlayer.OnVideoSizeChangedListener listener) {
+        if (mMarshmallowListener != null) {
+            super.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+                @Override
+                public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                    mCupcakeListener.onVideoSizeChanged(mp, width, height);
+                    listener.onVideoSizeChanged(mp, width, height);
+                }
+            });
+        } else {
+            super.setOnVideoSizeChangedListener(listener);
+        }
     }
 
     /**
      * @deprecated Use {@link StatefulMediaPlayer#setOnTimedTextListener(OnTimedTextListener)} instead.
      */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     @Deprecated
-    public void setOnTimedTextListener(MediaPlayer.OnTimedTextListener listener) {
-        super.setOnTimedTextListener(listener);
+    public void setOnTimedTextListener(final MediaPlayer.OnTimedTextListener listener) {
+        if (mJellyBeanListener != null) {
+            super.setOnTimedTextListener(new MediaPlayer.OnTimedTextListener() {
+                @Override
+                public void onTimedText(MediaPlayer mp, TimedText text) {
+                    mJellyBeanListener.onTimedText(mp, text);
+                    listener.onTimedText(mp, text);
+                }
+            });
+        } else {
+            super.setOnTimedTextListener(listener);
+        }
     }
 
     /**
      * @deprecated Use {@link StatefulMediaPlayer#setOnTimedMetaDataAvailableListener(OnTimedMetaDataAvailableListener)}} instead.
      */
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     @Deprecated
-    public void setOnTimedMetaDataAvailableListener(MediaPlayer.OnTimedMetaDataAvailableListener listener) {
-        super.setOnTimedMetaDataAvailableListener(listener);
+    public void setOnTimedMetaDataAvailableListener(final MediaPlayer.OnTimedMetaDataAvailableListener listener) {
+        if (mMarshmallowListener != null) {
+            super.setOnTimedMetaDataAvailableListener(new MediaPlayer.OnTimedMetaDataAvailableListener() {
+                @Override
+                public void onTimedMetaDataAvailable(MediaPlayer mp, TimedMetaData data) {
+                    mMarshmallowListener.onTimedMetaDataAvailable(mp, data);
+                    listener.onTimedMetaDataAvailable(mp, data);
+                }
+            });
+        } else {
+            super.setOnTimedMetaDataAvailableListener(listener);
+        }
     }
 
     /**
@@ -578,17 +645,34 @@ public class StatefulMediaPlayer extends MediaPlayer {
      */
     @Override
     @Deprecated
-    public void setOnErrorListener(MediaPlayer.OnErrorListener listener) {
-        super.setOnErrorListener(listener);
+    public void setOnErrorListener(final MediaPlayer.OnErrorListener listener) {
+        super.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                mListener.onError(mp, what, extra);
+                return listener.onError(mp, what, extra);
+            }
+        });
     }
 
     /**
      * @deprecated Use {@link StatefulMediaPlayer#setOnInfoListener(OnInfoListener)} instead.
      */
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     @Override
     @Deprecated
-    public void setOnInfoListener(MediaPlayer.OnInfoListener listener) {
-        super.setOnInfoListener(listener);
+    public void setOnInfoListener(final MediaPlayer.OnInfoListener listener) {
+        if (mCupcakeListener != null) {
+            super.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                @Override
+                public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                    mCupcakeListener.onInfo(mp, what, extra);
+                    return listener.onInfo(mp, what, extra);
+                }
+            });
+        } else {
+            super.setOnInfoListener(listener);
+        }
     }
 
 
