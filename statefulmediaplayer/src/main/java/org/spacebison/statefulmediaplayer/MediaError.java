@@ -3,6 +3,9 @@ package org.spacebison.statefulmediaplayer;
 import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * MediaPlayer error codes.
  */
@@ -163,6 +166,15 @@ public enum MediaError {
      */
     PVMFErrContentInvalidForProgressivePlayback(-32);
 
+    private static final Map<Integer, MediaError> mCodeMap = new HashMap<>(values().length);
+
+    static {
+        final MediaError[] values = values();
+        for (MediaError me : values) {
+            mCodeMap.put(me.mErrorCode, me);
+        }
+    }
+
     private final int mErrorCode;
 
     MediaError(int errorCode) {
@@ -170,13 +182,11 @@ public enum MediaError {
     }
 
     public static MediaError fromCode(int errorCode) {
-        for (MediaError me : values()) {
-            if (me.mErrorCode == errorCode) {
-                return me;
-            }
+        if (mCodeMap.containsKey(errorCode)) {
+            return mCodeMap.get(errorCode);
+        } else {
+            return UNKNOWN;
         }
-
-        return UNKNOWN;
     }
 
     public int getErrorCode() {

@@ -1,6 +1,5 @@
 package org.spacebison.miscellanea;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,14 +12,12 @@ import org.spacebison.statefulmediaplayer.MediaError;
 import org.spacebison.statefulmediaplayer.MediaInfo;
 import org.spacebison.statefulmediaplayer.StatefulMediaPlayer;
 
-import java.io.IOException;
-
 /**
  * Created by cmb on 20.03.16.
  */
 public class StatefulMediaPlayerTestActivity extends AppCompatActivity implements StatefulMediaPlayer.OnStateChangedListener, StatefulMediaPlayer.OnPreparedListener, StatefulMediaPlayer.OnErrorListener, StatefulMediaPlayer.OnInfoListener {
     private static final String TAG = "SMPTestActivity";
-    private final StatefulMediaPlayer mPlayer = new StatefulMediaPlayer();
+    private StatefulMediaPlayer mPlayer;
     private TextView mText;
     private ViewGroup mContent;
 
@@ -32,6 +29,7 @@ public class StatefulMediaPlayerTestActivity extends AppCompatActivity implement
         mContent = (ViewGroup) findViewById(android.R.id.content);
         mText = (TextView) findViewById(R.id.text);
 
+        mPlayer = StatefulMediaPlayer.create(this, R.raw.jam5);
         mPlayer.setOnStateChangedListener(this);
         mPlayer.setOnPreparedListener(this);
         mPlayer.setOnErrorListener(this);
@@ -80,15 +78,6 @@ public class StatefulMediaPlayerTestActivity extends AppCompatActivity implement
             mPlayer.reset();
         } catch (IllegalStateException e) {
             Toast.makeText(this, "Illegal state: " + e, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void onInitClick(View view) {
-        try {
-            mPlayer.setDataSource(this, Uri.parse("file:///android_asset/jam5.mp3"));
-            mPlayer.prepareAsync();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

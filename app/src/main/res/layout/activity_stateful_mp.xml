@@ -11,12 +11,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="init"
-        android:onClick="onInitClick"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="play"
         android:onClick="onPlayClick"/>
 

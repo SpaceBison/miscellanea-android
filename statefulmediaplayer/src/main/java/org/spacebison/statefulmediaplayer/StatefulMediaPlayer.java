@@ -93,6 +93,10 @@ public class StatefulMediaPlayer extends MediaPlayer {
         return mState;
     }
 
+    /**
+     * See {@link MediaPlayer#create(Context, Uri, SurfaceHolder, AudioAttributes, int)}
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static StatefulMediaPlayer create(Context context, Uri uri, SurfaceHolder holder, AudioAttributes audioAttributes, int audioSessionId) {
         try {
             StatefulMediaPlayer mp = new StatefulMediaPlayer();
@@ -113,6 +117,9 @@ public class StatefulMediaPlayer extends MediaPlayer {
         return null;
     }
 
+    /**
+     * See {@link MediaPlayer#create(Context, Uri, SurfaceHolder)}
+     */
     public static StatefulMediaPlayer create(Context context, Uri uri, SurfaceHolder holder) {
         try {
             StatefulMediaPlayer mp = new StatefulMediaPlayer();
@@ -129,6 +136,10 @@ public class StatefulMediaPlayer extends MediaPlayer {
         return null;
     }
 
+    /**
+     * See {@link MediaPlayer#create(Context, int, AudioAttributes, int)}
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static StatefulMediaPlayer create(Context context, int resid, AudioAttributes audioAttributes, int audioSessionId) {
         try {
             AssetFileDescriptor afd = context.getResources().openRawResourceFd(resid);
@@ -149,6 +160,9 @@ public class StatefulMediaPlayer extends MediaPlayer {
         return null;
     }
 
+    /**
+     * See {@link MediaPlayer#create(Context, int)}
+     */
     public static StatefulMediaPlayer create(Context context, int resid) {
         try {
             AssetFileDescriptor afd = context.getResources().openRawResourceFd(resid);
@@ -165,6 +179,9 @@ public class StatefulMediaPlayer extends MediaPlayer {
         return null;
     }
 
+    /**
+     * See {@link MediaPlayer#create(Context, Uri)}
+     */
     public static StatefulMediaPlayer create(Context context, Uri uri) {
         return create(context, uri, null);
     }
@@ -617,6 +634,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
 
     private synchronized void setState(State state) {
         mState = state;
+        Log.v(TAG, "State: " + mState);
         notifyOnStateChangedListener();
     }
 

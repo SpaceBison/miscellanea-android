@@ -3,6 +3,9 @@ package org.spacebison.statefulmediaplayer;
 import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * MediaPlayer info codes;
  */
@@ -224,6 +227,15 @@ public enum MediaInfo {
      */
     PVMFInfoIsShoutcastSesssion(52);
 
+    private static final Map<Integer, MediaInfo> mCodeMap = new HashMap<>(values().length);
+
+    static {
+        final MediaInfo[] values = values();
+        for (MediaInfo mi : values) {
+            mCodeMap.put(mi.mInfoCode, mi);
+        }
+    }
+
     private final int mInfoCode;
 
     MediaInfo(int infoCode) {
@@ -231,12 +243,11 @@ public enum MediaInfo {
     }
 
     public static MediaInfo fromCode(int infoCode) {
-        for (MediaInfo mi : values()) {
-            if (mi.mInfoCode == infoCode) {
-                return mi;
-            }
+        if (mCodeMap.containsKey(infoCode)) {
+            return mCodeMap.get(infoCode);
+        } else {
+            return UNKNOWN;
         }
-        return UNKNOWN;
     }
 
     public int getInfoCode() {
