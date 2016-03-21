@@ -2,6 +2,7 @@ package org.spacebison.statefulmediaplayer;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
 import android.media.MediaDataSource;
 import android.media.MediaPlayer;
@@ -9,13 +10,24 @@ import android.media.TimedMetaData;
 import android.media.TimedText;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
+import android.view.SurfaceHolder;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Map;
 
-import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.*;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.ERROR;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.IDLE;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.INITIALIZED;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.PAUSED;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.PLAYBACK_COMPLETED;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.PREPARED;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.PREPARING;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.RELEASED;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.STARTED;
+import static org.spacebison.statefulmediaplayer.StatefulMediaPlayer.State.STOPPED;
 
 /**
  * A {@link MediaPlayer} extension that keeps track of its state.
@@ -81,12 +93,88 @@ public class StatefulMediaPlayer extends MediaPlayer {
         return mState;
     }
 
+    public static StatefulMediaPlayer create(Context context, Uri uri, SurfaceHolder holder, AudioAttributes audioAttributes, int audioSessionId) {
+        try {
+            StatefulMediaPlayer mp = new StatefulMediaPlayer();
+            final AudioAttributes aa = audioAttributes != null ? audioAttributes :
+                    new AudioAttributes.Builder().build();
+            mp.setAudioAttributes(aa);
+            mp.setAudioSessionId(audioSessionId);
+            mp.setDataSource(context, uri);
+            if (holder != null) {
+                mp.setDisplay(holder);
+            }
+            mp.prepare();
+            return mp;
+        } catch (IOException | IllegalArgumentException | SecurityException ex) {
+            Log.d(TAG, "create failed:", ex);
+            // fall through
+        }
+        return null;
+    }
+
+    public static StatefulMediaPlayer create(Context context, Uri uri, SurfaceHolder holder) {
+        try {
+            StatefulMediaPlayer mp = new StatefulMediaPlayer();
+            mp.setDataSource(context, uri);
+            if (holder != null) {
+                mp.setDisplay(holder);
+            }
+            mp.prepare();
+            return mp;
+        } catch (IOException | IllegalArgumentException | SecurityException ex) {
+            Log.d(TAG, "create failed:", ex);
+            // fall through
+        }
+        return null;
+    }
+
+    public static StatefulMediaPlayer create(Context context, int resid, AudioAttributes audioAttributes, int audioSessionId) {
+        try {
+            AssetFileDescriptor afd = context.getResources().openRawResourceFd(resid);
+            if (afd == null) return null;
+            StatefulMediaPlayer mp = new StatefulMediaPlayer();
+            final AudioAttributes aa = audioAttributes != null ? audioAttributes :
+                    new AudioAttributes.Builder().build();
+            mp.setAudioAttributes(aa);
+            mp.setAudioSessionId(audioSessionId);
+            mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            afd.close();
+            mp.prepare();
+            return mp;
+        } catch (IOException | IllegalArgumentException | SecurityException ex) {
+            Log.d(TAG, "create failed:", ex);
+            // fall through
+        }
+        return null;
+    }
+
+    public static StatefulMediaPlayer create(Context context, int resid) {
+        try {
+            AssetFileDescriptor afd = context.getResources().openRawResourceFd(resid);
+            if (afd == null) return null;
+            StatefulMediaPlayer mp = new StatefulMediaPlayer();
+            mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            afd.close();
+            mp.prepare();
+            return mp;
+        } catch (IOException | SecurityException | IllegalArgumentException ex) {
+            Log.d(TAG, "create failed:", ex);
+            // fall through
+        }
+        return null;
+    }
+
+    public static StatefulMediaPlayer create(Context context, Uri uri) {
+        return create(context, uri, null);
+    }
+
     @Override
     public synchronized void setVideoScalingMode(int mode) {
         if (MethodStates.SET_VIDEO_SCALING_MODE.contains(mState)) {
             super.setVideoScalingMode(mode);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setVideoScalingMode()", mState, MethodStates.SET_VIDEO_SCALING_MODE));
         }
     }
 
@@ -96,7 +184,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(context, uri);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setDataSource()", mState, MethodStates.SET_DATA_SOURCE));
         }
     }
 
@@ -106,7 +194,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(context, uri, headers);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setDataSource()", mState, MethodStates.SET_DATA_SOURCE));
         }
     }
 
@@ -116,7 +204,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(path);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setDataSource()", mState, MethodStates.SET_DATA_SOURCE));
         }
     }
 
@@ -126,7 +214,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(fd);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setDataSource()", mState, MethodStates.SET_DATA_SOURCE));
         }
     }
 
@@ -136,7 +224,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(fd, offset, length);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setDataSource()", mState, MethodStates.SET_DATA_SOURCE));
         }
     }
 
@@ -146,8 +234,12 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.setDataSource(dataSource);
             setState(INITIALIZED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setDataSource()", mState, MethodStates.SET_DATA_SOURCE));
         }
+    }
+
+    private String getIllegalStateExceptionDetailMessage(String method, State state, MethodStates validStates) {
+        return method + " called in invalid state: " + state + "; valid states: " + validStates.mStates;
     }
 
     @Override
@@ -156,7 +248,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.prepare();
             setState(PREPARED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("prepare()", mState, MethodStates.PREPARE));
         }
     }
 
@@ -166,7 +258,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.prepareAsync();
             setState(PREPARING);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("prepareAsync()", mState, MethodStates.PREPARE_ASYNC));
         }
     }
 
@@ -176,7 +268,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.start();
             setState(STARTED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("start()", mState, MethodStates.START));
         }
     }
 
@@ -186,7 +278,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.stop();
             setState(STOPPED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("stop()", mState, MethodStates.STOP));
         }
     }
 
@@ -196,7 +288,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.pause();
             setState(PAUSED);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("pause()", mState, MethodStates.PAUSE));
         }
     }
 
@@ -205,7 +297,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_VIDEO_WIDTH.contains(mState)) {
             return super.getVideoWidth();
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("getVideoWidth()", mState, MethodStates.GET_VIDEO_WIDTH));
         }
     }
 
@@ -214,7 +306,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_VIDEO_HEIGHT.contains(mState)) {
             return super.getVideoHeight();
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("getVideoHeight()", mState, MethodStates.GET_VIDEO_HEIGHT));
         }
     }
 
@@ -223,7 +315,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.IS_PLAYING.contains(mState)) {
             return super.isPlaying();
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("isPlaying()", mState, MethodStates.IS_PLAYING));
         }
     }
 
@@ -232,7 +324,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SEEK_TO.contains(mState)) {
             super.seekTo(msec);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("seekTo()", mState, MethodStates.SEEK_TO));
         }
     }
 
@@ -241,7 +333,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_CURRENT_POSITION.contains(mState)) {
             return super.getCurrentPosition();
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("getCurrentPosition()", mState, MethodStates.GET_CURRENT_POSITION));
         }
     }
 
@@ -250,7 +342,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_DURATION.contains(mState)) {
             return super.getDuration();
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("getDuration()", mState, MethodStates.GET_DURATION));
         }
     }
 
@@ -280,7 +372,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
             super.reset();
             setState(IDLE);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("reset()", mState, MethodStates.RESET));
         }
     }
 
@@ -289,7 +381,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_AUDIO_STREAM_TYPE.contains(mState)) {
             super.setAudioStreamType(streamtype);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setAudioStreamType()", mState, MethodStates.SET_AUDIO_STREAM_TYPE));
         }
     }
 
@@ -298,7 +390,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_AUDIO_ATTRIBUTES.contains(mState)) {
             super.setAudioAttributes(attributes);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setAudioAttributes()", mState, MethodStates.SET_AUDIO_ATTRIBUTES));
         }
     }
 
@@ -307,7 +399,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_LOOPING.contains(mState)) {
             super.setLooping(looping);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setLooping()", mState, MethodStates.SET_LOOPING));
         }
     }
 
@@ -316,7 +408,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_VOLUME.contains(mState)) {
             super.setVolume(leftVolume, rightVolume);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setVolume()", mState, MethodStates.SET_VOLUME));
         }
     }
 
@@ -325,7 +417,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SET_AUDIO_SESSION_ID.contains(mState)) {
             super.setAudioSessionId(sessionId);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("setAudioSessionId()", mState, MethodStates.SET_AUDIO_SESSION_ID));
         }
     }
 
@@ -334,7 +426,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ATTACH_AUX_EFFECT.contains(mState)) {
             super.attachAuxEffect(effectId);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("attachAuxEffect()", mState, MethodStates.ATTACH_AUX_EFFECT));
         }
     }
 
@@ -343,7 +435,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.GET_TRACK_INFO.contains(mState)) {
             return super.getTrackInfo();
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("getTrackInfo()", mState, MethodStates.GET_TRACK_INFO));
         }
     }
 
@@ -352,7 +444,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ADD_TIMED_TEXT_SOURCE.contains(mState)) {
             super.addTimedTextSource(path, mimeType);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("addTimedTextSource()", mState, MethodStates.ADD_TIMED_TEXT_SOURCE));
         }
     }
 
@@ -361,7 +453,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ADD_TIMED_TEXT_SOURCE.contains(mState)) {
             super.addTimedTextSource(context, uri, mimeType);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("addTimedTextSource()", mState, MethodStates.ADD_TIMED_TEXT_SOURCE));
         }
     }
 
@@ -370,7 +462,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ADD_TIMED_TEXT_SOURCE.contains(mState)) {
             super.addTimedTextSource(fd, mimeType);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("addTimedTextSource()", mState, MethodStates.ADD_TIMED_TEXT_SOURCE));
         }
     }
 
@@ -379,7 +471,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.ADD_TIMED_TEXT_SOURCE.contains(mState)) {
             super.addTimedTextSource(fd, offset, length, mime);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("addTimedTextSource()", mState, MethodStates.ADD_TIMED_TEXT_SOURCE));
         }
     }
 
@@ -388,7 +480,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.SELECT_TRACK.contains(mState)) {
             super.selectTrack(index);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("selectTrack()", mState, MethodStates.SELECT_TRACK));
         }
     }
 
@@ -397,7 +489,7 @@ public class StatefulMediaPlayer extends MediaPlayer {
         if (MethodStates.DESELECT_TRACK.contains(mState)) {
             super.deselectTrack(index);
         } else {
-            throw new IllegalStateException("State: " + mState);
+            throw new IllegalStateException(getIllegalStateExceptionDetailMessage("deselectTrack()", mState, MethodStates.DESELECT_TRACK));
         }
     }
 
@@ -704,6 +796,8 @@ public class StatefulMediaPlayer extends MediaPlayer {
 
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
+            Log.v(TAG, "Buffering update: " + percent + '%');
+
             if (mOnBufferingUpdateListener != null) {
                 mOnBufferingUpdateListener.onBufferingUpdate(StatefulMediaPlayer.this, percent);
             }
@@ -711,29 +805,36 @@ public class StatefulMediaPlayer extends MediaPlayer {
 
         @Override
         public void onCompletion(MediaPlayer mp) {
-            if (isLooping()) {
-                setState(STARTED);
-            } else {
-                setState(PLAYBACK_COMPLETED);
-            }
+            Log.v(TAG, "Playback completed");
 
-            if (mOnCompletionListener != null) {
-                mOnCompletionListener.onCompletion(StatefulMediaPlayer.this);
+            if (mState != ERROR) {
+                if (isLooping()) {
+                    setState(STARTED);
+                } else {
+                    setState(PLAYBACK_COMPLETED);
+                }
+
+                if (mOnCompletionListener != null) {
+                    mOnCompletionListener.onCompletion(StatefulMediaPlayer.this);
+                }
             }
         }
 
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
+            final MediaError mediaError = MediaError.fromCode(what);
+            Log.v(TAG, "Error: " + mediaError + "; extra: " + extra + " (0x" + Integer.toHexString(extra) + ')');
             setState(ERROR);
 
             if (mOnErrorListener != null) {
-                mOnErrorListener.onError(StatefulMediaPlayer.this, MediaError.fromCode(what), extra);
+                mOnErrorListener.onError(StatefulMediaPlayer.this, mediaError, extra);
             }
             return false;
         }
 
         @Override
         public void onPrepared(MediaPlayer mp) {
+            Log.v(TAG, "Prepared");
             setState(PREPARED);
 
             if (mOnPreparedListener != null) {
@@ -743,6 +844,8 @@ public class StatefulMediaPlayer extends MediaPlayer {
 
         @Override
         public void onSeekComplete(MediaPlayer mp) {
+            Log.v(TAG, "Seek completed");
+
             if (mOnSeekCompleteListener != null) {
                 mOnSeekCompleteListener.onSeekComplete(StatefulMediaPlayer.this);
             }
@@ -754,11 +857,16 @@ public class StatefulMediaPlayer extends MediaPlayer {
 
         @Override
         public boolean onInfo(MediaPlayer mp, int what, int extra) {
-            return mOnInfoListener != null && mOnInfoListener.onInfo(StatefulMediaPlayer.this, MediaInfo.fromCode(what), extra);
+            final MediaInfo mediaInfo = MediaInfo.fromCode(what);
+            Log.v(TAG, "Info: " + mediaInfo + "; extra: " + extra + " (0x" + Integer.toHexString(extra) + ')');
+
+            return mOnInfoListener != null && mOnInfoListener.onInfo(StatefulMediaPlayer.this, mediaInfo, extra);
         }
 
         @Override
         public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+            Log.v(TAG, "Video size changed: " + width + 'x' + height);
+
             if (mOnVideoSizeChangedListener != null) {
                 mOnVideoSizeChangedListener.onVideoSizeChanged(StatefulMediaPlayer.this, width, height);
             }
@@ -770,6 +878,8 @@ public class StatefulMediaPlayer extends MediaPlayer {
 
         @Override
         public void onTimedText(MediaPlayer mp, TimedText text) {
+            Log.v(TAG, "Timed text: " + text);
+
             if (mOnTimedTextListener != null) {
                 mOnTimedTextListener.onTimedText(StatefulMediaPlayer.this, text);
             }
@@ -781,6 +891,8 @@ public class StatefulMediaPlayer extends MediaPlayer {
 
         @Override
         public void onTimedMetaDataAvailable(MediaPlayer mp, TimedMetaData data) {
+            Log.v(TAG, "Timed meta data: " + data);
+
             if (mOnTimedMetaDataAvailableListener != null) {
                 mOnTimedMetaDataAvailableListener.onTimedMetaDataAvailable(StatefulMediaPlayer.this, data);
             }

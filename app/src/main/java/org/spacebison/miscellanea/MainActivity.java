@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewGroup content = (ViewGroup) findViewById(android.R.id.content);
+        ViewGroup root = (ViewGroup) findViewById(R.id.root);
 
         Button mpButton = new Button(this);
         mpButton.setText("Media Player");
@@ -24,6 +24,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, StatefulMediaPlayerTestActivity.class));
             }
         });
-        content.addView(mpButton);
+        root.addView(mpButton);
     }
 }
