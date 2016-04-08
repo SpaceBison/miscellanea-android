@@ -25,5 +25,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         root.addView(mpButton);
+
+        Button tpButton = new Button(this);
+        tpButton.setText("Media Player");
+        tpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, TaskProgressBarTestActivity.class));
+            }
+        });
+        root.addView(tpButton);
     }
 }
