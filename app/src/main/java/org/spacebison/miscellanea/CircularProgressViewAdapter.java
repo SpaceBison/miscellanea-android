@@ -1,6 +1,6 @@
 package org.spacebison.miscellanea;
 
-import android.view.View;
+import android.support.v4.view.ViewCompat;
 
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
@@ -50,18 +50,21 @@ public class CircularProgressViewAdapter implements ProgressView {
     @Override
     public void setVisible(boolean visible) {
         if (visible) {
-            mProgressView.setVisibility(View.VISIBLE);
             mProgressView.startAnimation();
+            ViewCompat.animate(mProgressView).alpha(1);
         } else {
-            mProgressView.setVisibility(View.INVISIBLE);
-            mProgressView.stopAnimation();
+            ViewCompat.animate(mProgressView).alpha(0).withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    mProgressView.stopAnimation();
+                }
+            });
         }
-
     }
 
     @Override
     public boolean isVisible() {
-        return mProgressView.getVisibility() == View.VISIBLE;
+        return ViewCompat.getAlpha(mProgressView) > 0.5;
     }
 
     @Override

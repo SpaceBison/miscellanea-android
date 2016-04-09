@@ -1,6 +1,6 @@
 package org.spacebison.progressviewcontroller;
 
-import android.view.View;
+import android.support.v4.view.ViewCompat;
 import android.widget.ProgressBar;
 
 /**
@@ -47,12 +47,14 @@ class ProgressBarAdapter implements ProgressView {
 
     @Override
     public void setVisible(boolean visible) {
-        mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        ViewCompat.animate(mProgressBar).alpha(visible ? 1 : 0);
+        //mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
     public boolean isVisible() {
-        return mProgressBar.getVisibility() == View.VISIBLE;
+        return ViewCompat.getAlpha(mProgressBar) > 0.5;
+        //return mProgressBar.getVisibility() == View.VISIBLE;
     }
 
     @Override

@@ -116,7 +116,10 @@ public class ProgressViewController {
 
                     setIndeterminate(noTasks);
 
-                    mProgressView.setVisible(!noTasks || !noIndeterminateTasks);
+                    final boolean visible = !noTasks || !noIndeterminateTasks;
+                    if (mProgressView.isVisible() != visible) {
+                        mProgressView.setVisible(visible);
+                    }
                 }
             }
         });
