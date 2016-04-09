@@ -1,6 +1,8 @@
 package org.spacebison.progressviewcontroller;
 
-import android.support.v4.view.ViewCompat;
+import android.os.Build;
+import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 
 /**
@@ -8,6 +10,7 @@ import android.widget.ProgressBar;
  * Created by cmb on 09.04.16.
  */
 class ProgressBarAdapter implements ProgressView {
+    private static final String TAG = "ProgressBarAdapter";
     private final ProgressBar mProgressBar;
 
     public ProgressBarAdapter(ProgressBar progressBar) {
@@ -47,18 +50,12 @@ class ProgressBarAdapter implements ProgressView {
 
     @Override
     public void setVisible(boolean visible) {
-        ViewCompat.animate(mProgressBar).alpha(visible ? 1 : 0);
-        //mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-    }
+        Log.d(TAG, "set visible: " + visible);
 
-    @Override
-    public boolean isVisible() {
-        return ViewCompat.getAlpha(mProgressBar) > 0.5;
-        //return mProgressBar.getVisibility() == View.VISIBLE;
-    }
-
-    @Override
-    public void post(Runnable runnable) {
-        mProgressBar.post(runnable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            mProgressBar.animate().alpha(visible ? 1 : 0);
+        } else {
+            mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 }

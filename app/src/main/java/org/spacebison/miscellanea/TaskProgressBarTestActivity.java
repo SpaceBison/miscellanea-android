@@ -1,7 +1,7 @@
 package org.spacebison.miscellanea;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
@@ -12,9 +12,12 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import org.spacebison.progressviewcontroller.ProgressViewController;
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class TaskProgressBarTestActivity extends AppCompatActivity {
 
+    private final Executor mExecutor = Executors.newCachedThreadPool();
     private ProgressViewController mCircleViewController;
     private ProgressViewController mProgressViewController;
 
@@ -49,14 +52,19 @@ public class TaskProgressBarTestActivity extends AppCompatActivity {
 
     private class IndeterminateSwitchListener implements CompoundButton.OnCheckedChangeListener {
         @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-                mProgressViewController.notifyIndeterminateTaskStarted();
-                mCircleViewController.notifyIndeterminateTaskStarted();
-            } else {
-                mProgressViewController.notifyIndeterminateTaskFinished();
-                mCircleViewController.notifyIndeterminateTaskFinished();
-            }
+        public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+            mExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (isChecked) {
+                        mProgressViewController.notifyIndeterminateTaskStarted();
+                        mCircleViewController.notifyIndeterminateTaskStarted();
+                    } else {
+                        mProgressViewController.notifyIndeterminateTaskFinished();
+                        mCircleViewController.notifyIndeterminateTaskFinished();
+                    }
+                }
+            });
         }
     }
 
@@ -70,14 +78,19 @@ public class TaskProgressBarTestActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-                mProgressViewController.notifyTaskStarted(mId, mMaxProgress);
-                mCircleViewController.notifyTaskStarted(mId, mMaxProgress);
-            } else {
-                mProgressViewController.notifyTaskFinished(mId);
-                mCircleViewController.notifyTaskFinished(mId);
-            }
+        public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+            mExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (isChecked) {
+                        mProgressViewController.notifyTaskStarted(mId, mMaxProgress);
+                        mCircleViewController.notifyTaskStarted(mId, mMaxProgress);
+                    } else {
+                        mProgressViewController.notifyTaskFinished(mId);
+                        mCircleViewController.notifyTaskFinished(mId);
+                    }
+                }
+            });
         }
     }
 
@@ -89,12 +102,17 @@ public class TaskProgressBarTestActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            try {
-                mProgressViewController.notifyTaskProgressChanged(mId, progress);
-                mCircleViewController.notifyTaskProgressChanged(mId, progress);
-            } catch (NoSuchElementException ignored) {
-            }
+        public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
+            mExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        mProgressViewController.notifyTaskProgressChanged(mId, progress);
+                        mCircleViewController.notifyTaskProgressChanged(mId, progress);
+                    } catch (NoSuchElementException ignored) {
+                    }
+                }
+            });
         }
 
         @Override

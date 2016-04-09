@@ -19,7 +19,12 @@ public class CircularProgressViewAdapter implements ProgressView {
     @Override
     public void setIndeterminate(boolean indeterminate) {
         mProgressView.setIndeterminate(indeterminate);
-        mProgressView.startAnimation();
+        mProgressView.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressView.startAnimation();
+            }
+        });
     }
 
     @Override
@@ -28,8 +33,13 @@ public class CircularProgressViewAdapter implements ProgressView {
     }
 
     @Override
-    public void setProgress(int progress) {
-        mProgressView.setProgress(progress);
+    public void setProgress(final int progress) {
+        mProgressView.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressView.setProgress(progress);
+            }
+        });
     }
 
     @Override
@@ -38,8 +48,13 @@ public class CircularProgressViewAdapter implements ProgressView {
     }
 
     @Override
-    public void setMaxProgress(int maxProgress) {
-        mProgressView.setMaxProgress(maxProgress);
+    public void setMaxProgress(final int maxProgress) {
+        mProgressView.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressView.setMaxProgress(maxProgress);
+            }
+        });
     }
 
     @Override
@@ -48,27 +63,26 @@ public class CircularProgressViewAdapter implements ProgressView {
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        if (visible) {
-            mProgressView.startAnimation();
-            ViewCompat.animate(mProgressView).alpha(1);
-        } else {
-            ViewCompat.animate(mProgressView).alpha(0).withEndAction(new Runnable() {
-                @Override
-                public void run() {
-                    mProgressView.stopAnimation();
+    public void setVisible(final boolean visible) {
+        mProgressView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (visible) {
+                    if (mProgressView.getAlpha() < 0.5) {
+                        mProgressView.startAnimation();
+                        ViewCompat.animate(mProgressView).alpha(1);
+                    }
+                } else {
+                    if (mProgressView.getAlpha() >= 0.5) {
+                        ViewCompat.animate(mProgressView).alpha(0).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                mProgressView.stopAnimation();
+                            }
+                        });
+                    }
                 }
-            });
-        }
-    }
-
-    @Override
-    public boolean isVisible() {
-        return ViewCompat.getAlpha(mProgressView) > 0.5;
-    }
-
-    @Override
-    public void post(Runnable runnable) {
-        mProgressView.post(runnable);
+            }
+        });
     }
 }

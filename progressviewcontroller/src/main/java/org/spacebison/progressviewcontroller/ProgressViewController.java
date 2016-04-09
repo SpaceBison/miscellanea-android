@@ -1,5 +1,6 @@
 package org.spacebison.progressviewcontroller;
 
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by wmatuszewski on 4/8/16.
  */
 public class ProgressViewController {
+    private static final String TAG = "ProgressViewController";
     private final AtomicInteger mIndeterminateTasks = new AtomicInteger(0);
     private final HashMap<String, Task> mTasks = new HashMap<>();
     private final Task mSumTask = new Task(0,0);
@@ -17,11 +19,11 @@ public class ProgressViewController {
 
     public ProgressViewController(ProgressView progressView) {
         mProgressView = progressView;
+        updateVisibility();
     }
 
     public ProgressViewController(ProgressBar progressBar) {
-        mProgressView = new ProgressBarAdapter(progressBar);
-        updateVisibility();
+        this(new ProgressBarAdapter(progressBar));
     }
 
     public void notifyIndeterminateTaskStarted() {
@@ -107,22 +109,17 @@ public class ProgressViewController {
     }
 
     private void updateVisibility() {
-        mProgressView.post(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (mTasks) {
-                    final boolean noTasks = mTasks.isEmpty();
-                    final boolean noIndeterminateTasks = mIndeterminateTasks.get() <= 0;
+        boolean noTasks;
+        synchronized (mTasks) {
+            noTasks = mTasks.isEmpty();
+        }
+        final boolean noIndeterminateTasks = mIndeterminateTasks.get() <= 0;
 
-                    setIndeterminate(noTasks);
+        setIndeterminate(noTasks);
 
-                    final boolean visible = !noTasks || !noIndeterminateTasks;
-                    if (mProgressView.isVisible() != visible) {
-                        mProgressView.setVisible(visible);
-                    }
-                }
-            }
-        });
+        final boolean visible = !(noTasks && noIndeterminateTasks);
+        Log.d(TAG, "Setting visibile: " + visible);
+        mProgressView.setVisible(visible);
     }
 
     private void setIndeterminate(boolean indeterminate) {

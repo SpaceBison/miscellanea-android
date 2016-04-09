@@ -11,6 +11,4 @@ public interface ProgressView {
     void setMaxProgress(int maxProgress);
     int getMaxProgress();
     void setVisible(boolean visible);
-    boolean isVisible();
-    void post(Runnable runnable);
 }
