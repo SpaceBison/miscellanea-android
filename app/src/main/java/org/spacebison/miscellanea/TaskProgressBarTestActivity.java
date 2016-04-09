@@ -45,19 +45,6 @@ public class TaskProgressBarTestActivity extends AppCompatActivity {
         task2.setOnCheckedChangeListener(new TaskSwitchListener("task2", seek2.getMax()));
         SwitchCompat task3 = (SwitchCompat) findViewById(R.id.task_switch3);
         task3.setOnCheckedChangeListener(new TaskSwitchListener("task3", seek3.getMax()));
-
-        final ProgressBar test1 = (ProgressBar) findViewById(R.id.test_progress1);
-        final ProgressBar test2 = (ProgressBar) findViewById(R.id.test_progress2);
-        final CircularProgressView test3 = (CircularProgressView) findViewById(R.id.test_progress3);
-        SwitchCompat testSwitch = (SwitchCompat) findViewById(R.id.test_switch);
-        testSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                test1.setIndeterminate(isChecked);
-                test2.setIndeterminate(isChecked);
-                test3.setIndeterminate(isChecked);
-            }
-        });
     }
 
     private class IndeterminateSwitchListener implements CompoundButton.OnCheckedChangeListener {

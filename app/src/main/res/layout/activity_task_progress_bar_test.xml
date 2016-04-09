@@ -101,35 +101,4 @@
         android:layout_height="wrap_content"
         android:text="indeterminate 3"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ProgressBar
-            android:id="@+id/test_progress1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <com.github.rahatarmanahmed.cpv.CircularProgressView
-            android:id="@+id/test_progress3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:cpv_progress="50"
-            app:cpv_maxProgress="100"
-            app:cpv_animAutostart="true"/>
-
-    </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/test_progress2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:progress="50"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
-
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/test_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
 </LinearLayout>
