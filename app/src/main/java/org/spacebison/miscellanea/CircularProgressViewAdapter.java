@@ -18,18 +18,15 @@ public class CircularProgressViewAdapter implements ProgressView {
 
     @Override
     public void setIndeterminate(boolean indeterminate) {
-        mProgressView.setIndeterminate(indeterminate);
-        mProgressView.post(new Runnable() {
-            @Override
-            public void run() {
-                mProgressView.startAnimation();
-            }
-        });
-    }
-
-    @Override
-    public boolean isIndeterminate() {
-        return mProgressView.isIndeterminate();
+        if (mProgressView.isIndeterminate() != indeterminate) {
+            mProgressView.setIndeterminate(indeterminate);
+            mProgressView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mProgressView.startAnimation();
+                }
+            });
+        }
     }
 
     @Override

@@ -5,7 +5,6 @@ package org.spacebison.progressviewcontroller;
  */
 public interface ProgressView {
     void setIndeterminate(boolean indeterminate);
-    boolean isIndeterminate();
     void setProgress(int progress);
     int getProgress();
     void setMaxProgress(int maxProgress);

@@ -1,6 +1,5 @@
 package org.spacebison.progressviewcontroller;
 
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import java.util.HashMap;
@@ -74,8 +73,8 @@ public class ProgressViewController {
 
             mSumTask.progress -= task.progress;
             mSumTask.progress += progress;
-            updateProgress();
             task.progress = progress;
+            updateProgress();
         }
     }
 
@@ -109,23 +108,12 @@ public class ProgressViewController {
     }
 
     private void updateVisibility() {
-        boolean noTasks;
-        synchronized (mTasks) {
-            noTasks = mTasks.isEmpty();
-        }
+        final boolean noTasks = mTasks.isEmpty();
         final boolean noIndeterminateTasks = mIndeterminateTasks.get() <= 0;
-
-        setIndeterminate(noTasks);
-
         final boolean visible = !(noTasks && noIndeterminateTasks);
-        Log.d(TAG, "Setting visibile: " + visible);
-        mProgressView.setVisible(visible);
-    }
 
-    private void setIndeterminate(boolean indeterminate) {
-        if (mProgressView.isIndeterminate() != indeterminate) {
-            mProgressView.setIndeterminate(indeterminate);
-        }
+        mProgressView.setIndeterminate(noTasks);
+        mProgressView.setVisible(visible);
     }
 
     private static class Task {
