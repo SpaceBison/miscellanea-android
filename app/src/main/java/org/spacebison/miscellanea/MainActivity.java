@@ -9,31 +9,29 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ViewGroup mRoot;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewGroup root = (ViewGroup) findViewById(R.id.root);
+        mRoot = (ViewGroup) findViewById(R.id.root);
 
+        addActivityButton(StatefulMediaPlayerTestActivity.class);
+        addActivityButton(TaskProgressBarTestActivity.class);
+    }
+
+    private void addActivityButton(final Class<?> activityClass) {
         Button mpButton = new Button(this);
-        mpButton.setText("Media Player");
+        mpButton.setText(activityClass.getSimpleName());
         mpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, StatefulMediaPlayerTestActivity.class));
+                startActivity(new Intent(MainActivity.this, activityClass));
             }
         });
-        root.addView(mpButton);
-
-        Button tpButton = new Button(this);
-        tpButton.setText("Media Player");
-        tpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, TaskProgressBarTestActivity.class));
-            }
-        });
-        root.addView(tpButton);
+        mRoot.addView(mpButton);
     }
+
 }

@@ -4,21 +4,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
-import org.spacebison.taskprogressbar.TaskProgressBar;
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
+
+import org.spacebison.progressviewcontroller.ProgressViewController;
 
 import java.util.NoSuchElementException;
 
 public class TaskProgressBarTestActivity extends AppCompatActivity {
 
-    private TaskProgressBar mTaskProgressBar;
+    private ProgressViewController mCircleViewController;
+    private ProgressViewController mProgressViewController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_progress_bar_test);
-        mTaskProgressBar = (TaskProgressBar) findViewById(R.id.task_progress_bar);
+        mProgressViewController = new ProgressViewController((ProgressBar) findViewById(R.id.progress_bar));
+        mCircleViewController = new ProgressViewController(new CircularProgressViewAdapter((CircularProgressView) findViewById(R.id.circular_progress_view)));
+
         SwitchCompat indeterminate1 = (SwitchCompat) findViewById(R.id.switch1);
         indeterminate1.setOnCheckedChangeListener(new IndeterminateSwitchListener());
         SwitchCompat indeterminate2 = (SwitchCompat) findViewById(R.id.switch2);
@@ -39,15 +45,30 @@ public class TaskProgressBarTestActivity extends AppCompatActivity {
         task2.setOnCheckedChangeListener(new TaskSwitchListener("task2", seek2.getMax()));
         SwitchCompat task3 = (SwitchCompat) findViewById(R.id.task_switch3);
         task3.setOnCheckedChangeListener(new TaskSwitchListener("task3", seek3.getMax()));
+
+        final ProgressBar test1 = (ProgressBar) findViewById(R.id.test_progress1);
+        final ProgressBar test2 = (ProgressBar) findViewById(R.id.test_progress2);
+        final CircularProgressView test3 = (CircularProgressView) findViewById(R.id.test_progress3);
+        SwitchCompat testSwitch = (SwitchCompat) findViewById(R.id.test_switch);
+        testSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                test1.setIndeterminate(isChecked);
+                test2.setIndeterminate(isChecked);
+                test3.setIndeterminate(isChecked);
+            }
+        });
     }
 
     private class IndeterminateSwitchListener implements CompoundButton.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                mTaskProgressBar.notifyIndeterminateTaskStarted();
+                mProgressViewController.notifyIndeterminateTaskStarted();
+                mCircleViewController.notifyIndeterminateTaskStarted();
             } else {
-                mTaskProgressBar.notifyIndeterminateTaskFinished();
+                mProgressViewController.notifyIndeterminateTaskFinished();
+                mCircleViewController.notifyIndeterminateTaskFinished();
             }
         }
     }
@@ -64,9 +85,11 @@ public class TaskProgressBarTestActivity extends AppCompatActivity {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                mTaskProgressBar.notifyTaskStarted(mId, mMaxProgress);
+                mProgressViewController.notifyTaskStarted(mId, mMaxProgress);
+                mCircleViewController.notifyTaskStarted(mId, mMaxProgress);
             } else {
-                mTaskProgressBar.notifyTaskFinished(mId);
+                mProgressViewController.notifyTaskFinished(mId);
+                mCircleViewController.notifyTaskFinished(mId);
             }
         }
     }
@@ -81,7 +104,8 @@ public class TaskProgressBarTestActivity extends AppCompatActivity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             try {
-                mTaskProgressBar.notifyTaskProgressChanged(mId, progress);
+                mProgressViewController.notifyTaskProgressChanged(mId, progress);
+                mCircleViewController.notifyTaskProgressChanged(mId, progress);
             } catch (NoSuchElementException ignored) {
             }
         }
@@ -97,3 +121,4 @@ public class TaskProgressBarTestActivity extends AppCompatActivity {
         }
     }
 }
+

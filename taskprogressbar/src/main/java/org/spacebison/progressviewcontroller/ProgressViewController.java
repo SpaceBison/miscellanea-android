@@ -1,11 +1,5 @@
-package org.spacebison.taskprogressbar;
+package org.spacebison.progressviewcontroller;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.os.Build;
-import android.support.v4.view.ViewCompat;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import java.util.HashMap;
@@ -15,32 +9,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by wmatuszewski on 4/8/16.
  */
-public class TaskProgressBar extends ProgressBar {
-    private static final String TAG = "TaskProgressBar";
+public class ProgressViewController {
     private final AtomicInteger mIndeterminateTasks = new AtomicInteger(0);
     private final HashMap<String, Task> mTasks = new HashMap<>();
     private final Task mSumTask = new Task(0,0);
+    private final ProgressView mProgressView;
 
-    /**
-     * Create a new progress bar with range 0...100 and initial progress of 0.
-     *
-     * @param context the application environment
-     */
-    public TaskProgressBar(Context context) {
-        super(context);
+    public ProgressViewController(ProgressView progressView) {
+        mProgressView = progressView;
     }
 
-    public TaskProgressBar(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public TaskProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TaskProgressBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+    public ProgressViewController(ProgressBar progressBar) {
+        mProgressView = new ProgressBarAdapter(progressBar);
+        updateVisibility();
     }
 
     public void notifyIndeterminateTaskStarted() {
@@ -61,8 +42,7 @@ public class TaskProgressBar extends ProgressBar {
             mTasks.put(id, newTask);
             mSumTask.progress += newTask.progress;
             mSumTask.maxProgress += newTask.maxProgress;
-            setMax(mSumTask.maxProgress);
-            setProgress(mSumTask.progress);
+            updateProgress();
             updateVisibility();
         }
     }
@@ -74,8 +54,7 @@ public class TaskProgressBar extends ProgressBar {
             mTasks.put(id, newTask);
             mSumTask.progress += newTask.progress;
             mSumTask.maxProgress += newTask.maxProgress;
-            setMax(mSumTask.maxProgress);
-            setProgress(mSumTask.progress);
+            updateProgress();
 
             if (firstTask) {
                 updateVisibility();
@@ -93,8 +72,7 @@ public class TaskProgressBar extends ProgressBar {
 
             mSumTask.progress -= task.progress;
             mSumTask.progress += progress;
-            setMax(mSumTask.maxProgress);
-            setProgress(mSumTask.progress);
+            updateProgress();
             task.progress = progress;
         }
     }
@@ -109,8 +87,7 @@ public class TaskProgressBar extends ProgressBar {
 
             mSumTask.maxProgress -= task.maxProgress;
             mSumTask.progress -= task.progress;
-            setMax(mSumTask.maxProgress);
-            setProgress(mSumTask.progress);
+            updateProgress();
 
             mTasks.remove(id);
             if (mTasks.isEmpty()) {
@@ -119,27 +96,36 @@ public class TaskProgressBar extends ProgressBar {
         }
     }
 
+    private void updateProgress() {
+        if (mProgressView.getMaxProgress() != mSumTask.maxProgress) {
+            mProgressView.setMaxProgress(mSumTask.maxProgress);
+        }
+
+        if (mProgressView.getProgress() != mSumTask.progress) {
+            mProgressView.setProgress(mSumTask.progress);
+        }
+    }
+
     private void updateVisibility() {
-        post(new Runnable() {
+        mProgressView.post(new Runnable() {
             @Override
             public void run() {
                 synchronized (mTasks) {
                     final boolean noTasks = mTasks.isEmpty();
                     final boolean noIndeterminateTasks = mIndeterminateTasks.get() <= 0;
 
-                    Log.d(TAG, "Update visibility; no tasks? " + noTasks + "; no indeterminate? " + noIndeterminateTasks);
-
                     setIndeterminate(noTasks);
-                    if (noTasks && noIndeterminateTasks) {
-                        Log.d(TAG, "Hiding");
-                        ViewCompat.animate(TaskProgressBar.this).alpha(0);
-                    } else {
-                        Log.d(TAG, "Showing");
-                        ViewCompat.animate(TaskProgressBar.this).alpha(1);
-                    }
+
+                    mProgressView.setVisible(!noTasks || !noIndeterminateTasks);
                 }
             }
         });
+    }
+
+    private void setIndeterminate(boolean indeterminate) {
+        if (mProgressView.isIndeterminate() != indeterminate) {
+            mProgressView.setIndeterminate(indeterminate);
+        }
     }
 
     private static class Task {
