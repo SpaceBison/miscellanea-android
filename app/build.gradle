@@ -25,5 +25,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
     compile project(':statefulmediaplayer')
-    compile project(':taskprogressbar')
+    compile project(':progressviewcontroller')
 }

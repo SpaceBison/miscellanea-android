@@ -1,1 +1,1 @@
-include ':app', ':statefulmediaplayer', ':taskprogressbar'
+include ':app', ':statefulmediaplayer', ':progressviewcontroller'
