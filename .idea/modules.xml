@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Miscellanea.iml" filepath="$PROJECT_DIR$/Miscellanea.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/miscellanea-android.iml" filepath="$PROJECT_DIR$/miscellanea-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/permissionrequestactivity/permissionrequestactivity.iml" filepath="$PROJECT_DIR$/permissionrequestactivity/permissionrequestactivity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/progressviewcontroller/progressviewcontroller.iml" filepath="$PROJECT_DIR$/progressviewcontroller/progressviewcontroller.iml" />
       <module fileurl="file://$PROJECT_DIR$/progressviewcontroller/progressviewcontroller.iml" filepath="$PROJECT_DIR$/progressviewcontroller/progressviewcontroller.iml" />
       <module fileurl="file://$PROJECT_DIR$/statefulmediaplayer/statefulmediaplayer.iml" filepath="$PROJECT_DIR$/statefulmediaplayer/statefulmediaplayer.iml" />
       <module fileurl="file://$PROJECT_DIR$/progressviewcontroller/taskprogressbar.iml" filepath="$PROJECT_DIR$/progressviewcontroller/taskprogressbar.iml" />

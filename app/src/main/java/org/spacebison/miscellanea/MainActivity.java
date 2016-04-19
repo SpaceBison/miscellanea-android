@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.spacebison.permissionrequestactivity.PermissionRequestActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     private ViewGroup mRoot;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         addActivityButton(StatefulMediaPlayerTestActivity.class);
         addActivityButton(TaskProgressBarTestActivity.class);
+        addActivityButton(PermissionRequestActivity.class);
     }
 
     private void addActivityButton(final Class<?> activityClass) {
