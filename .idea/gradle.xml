@@ -10,7 +10,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/locationtest" />
             <option value="$PROJECT_DIR$/permissionrequestactivity" />
+            <option value="$PROJECT_DIR$/persistentalarmmanager" />
             <option value="$PROJECT_DIR$/progressviewcontroller" />
             <option value="$PROJECT_DIR$/statefulmediaplayer" />
           </set>
@@ -19,7 +21,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/locationtest" />
             <option value="$PROJECT_DIR$/permissionrequestactivity" />
+            <option value="$PROJECT_DIR$/persistentalarmmanager" />
             <option value="$PROJECT_DIR$/progressviewcontroller" />
             <option value="$PROJECT_DIR$/statefulmediaplayer" />
           </set>

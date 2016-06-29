@@ -1,4 +1,4 @@
-package org.spacebison.miscellanea;
+package com.n7mobile.locationtest;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
