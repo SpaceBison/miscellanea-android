@@ -9,6 +9,9 @@
           <set>
             <option value="/storage/Code/Miscellanea" />
             <option value="/storage/Code/Miscellanea/app" />
+            <option value="/storage/Code/Miscellanea/locationtest" />
+            <option value="/storage/Code/Miscellanea/permissionrequestactivity" />
+            <option value="/storage/Code/Miscellanea/persistentalarmmanager" />
             <option value="/storage/Code/Miscellanea/progressviewcontroller" />
             <option value="/storage/Code/Miscellanea/statefulmediaplayer" />
           </set>

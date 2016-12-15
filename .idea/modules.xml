@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file:///storage/Code/Miscellanea/Miscellanea.iml" filepath="/storage/Code/Miscellanea/Miscellanea.iml" />
       <module fileurl="file:///storage/Code/Miscellanea/app/app.iml" filepath="/storage/Code/Miscellanea/app/app.iml" />
+      <module fileurl="file:///storage/Code/Miscellanea/locationtest/locationtest.iml" filepath="/storage/Code/Miscellanea/locationtest/locationtest.iml" />
+      <module fileurl="file:///storage/Code/Miscellanea/permissionrequestactivity/permissionrequestactivity.iml" filepath="/storage/Code/Miscellanea/permissionrequestactivity/permissionrequestactivity.iml" />
+      <module fileurl="file:///storage/Code/Miscellanea/persistentalarmmanager/persistentalarmmanager.iml" filepath="/storage/Code/Miscellanea/persistentalarmmanager/persistentalarmmanager.iml" />
       <module fileurl="file:///storage/Code/Miscellanea/progressviewcontroller/progressviewcontroller.iml" filepath="/storage/Code/Miscellanea/progressviewcontroller/progressviewcontroller.iml" />
       <module fileurl="file:///storage/Code/Miscellanea/statefulmediaplayer/statefulmediaplayer.iml" filepath="/storage/Code/Miscellanea/statefulmediaplayer/statefulmediaplayer.iml" />
     </modules>
