@@ -1,5 +1,6 @@
 package org.spacebison.progressviewcontroller;
 
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import java.util.HashMap;
@@ -78,6 +79,24 @@ public class ProgressViewController {
         }
     }
 
+    public void notifyTaskProgressChanged(String id, int progress, int maxProgress) {
+        synchronized (mTasks) {
+            Task task = mTasks.get(id);
+
+            if (task == null) {
+                throw new NoSuchElementException("No task with id: " + id);
+            }
+
+            mSumTask.progress -= task.progress;
+            mSumTask.progress += progress;
+            task.progress = progress;
+            mSumTask.maxProgress -= task.maxProgress;
+            mSumTask.maxProgress += maxProgress;
+            task.maxProgress = maxProgress;
+            updateProgress();
+        }
+    }
+
     public void notifyTaskFinished(String id) {
         synchronized (mTasks) {
             Task task = mTasks.get(id);
@@ -98,6 +117,8 @@ public class ProgressViewController {
     }
 
     private void updateProgress() {
+        Log.d(TAG, "Update progress: " + mSumTask);
+
         if (mProgressView.getMaxProgress() != mSumTask.maxProgress) {
             mProgressView.setMaxProgress(mSumTask.maxProgress);
         }
@@ -126,6 +147,14 @@ public class ProgressViewController {
         public Task(int progress, int maxProgress) {
             this.maxProgress = maxProgress;
             this.progress = progress;
+        }
+
+        @Override
+        public String toString() {
+            return "Task{" +
+                    "maxProgress=" + maxProgress +
+                    ", progress=" + progress +
+                    '}';
         }
     }
 }

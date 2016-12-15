@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Miscellanea.iml" filepath="$PROJECT_DIR$/Miscellanea.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/progressviewcontroller/progressviewcontroller.iml" filepath="$PROJECT_DIR$/progressviewcontroller/progressviewcontroller.iml" />
-      <module fileurl="file://$PROJECT_DIR$/statefulmediaplayer/statefulmediaplayer.iml" filepath="$PROJECT_DIR$/statefulmediaplayer/statefulmediaplayer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/progressviewcontroller/taskprogressbar.iml" filepath="$PROJECT_DIR$/progressviewcontroller/taskprogressbar.iml" />
+      <module fileurl="file:///storage/Code/Miscellanea/Miscellanea.iml" filepath="/storage/Code/Miscellanea/Miscellanea.iml" />
+      <module fileurl="file:///storage/Code/Miscellanea/app/app.iml" filepath="/storage/Code/Miscellanea/app/app.iml" />
+      <module fileurl="file:///storage/Code/Miscellanea/progressviewcontroller/progressviewcontroller.iml" filepath="/storage/Code/Miscellanea/progressviewcontroller/progressviewcontroller.iml" />
+      <module fileurl="file:///storage/Code/Miscellanea/statefulmediaplayer/statefulmediaplayer.iml" filepath="/storage/Code/Miscellanea/statefulmediaplayer/statefulmediaplayer.iml" />
     </modules>
   </component>
 </project>
