@@ -8,6 +8,7 @@
         <option name="modules">
           <set>
             <option value="/storage/Code/Miscellanea" />
+            <option value="/storage/Code/Miscellanea/androidutils" />
             <option value="/storage/Code/Miscellanea/app" />
             <option value="/storage/Code/Miscellanea/locationtest" />
             <option value="/storage/Code/Miscellanea/permissionrequestactivity" />

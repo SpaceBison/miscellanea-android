@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file:///storage/Code/Miscellanea/Miscellanea.iml" filepath="/storage/Code/Miscellanea/Miscellanea.iml" />
+      <module fileurl="file:///storage/Code/Miscellanea/androidutils/androidutils.iml" filepath="/storage/Code/Miscellanea/androidutils/androidutils.iml" />
       <module fileurl="file:///storage/Code/Miscellanea/app/app.iml" filepath="/storage/Code/Miscellanea/app/app.iml" />
       <module fileurl="file:///storage/Code/Miscellanea/locationtest/locationtest.iml" filepath="/storage/Code/Miscellanea/locationtest/locationtest.iml" />
       <module fileurl="file:///storage/Code/Miscellanea/permissionrequestactivity/permissionrequestactivity.iml" filepath="/storage/Code/Miscellanea/permissionrequestactivity/permissionrequestactivity.iml" />
