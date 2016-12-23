@@ -1,8 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group='com.github.SpaceBison.Miscellanea'
-
+group='com.github.SpaceBison.miscellanea-android'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
