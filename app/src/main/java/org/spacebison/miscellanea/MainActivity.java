@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         addActivityButton(TaskProgressBarTestActivity.class);
         addActivityButton(ProgressBarActivity.class);
         addActivityButton(PermissionRequestActivity.class);
+
+
     }
 
     private void addActivityButton(final Class<?> activityClass) {

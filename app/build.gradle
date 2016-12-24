@@ -28,4 +28,5 @@ dependencies {
     compile project(':statefulmediaplayer')
     compile project(':progressviewcontroller')
     compile project(':permissionrequestactivity')
+    compile project(':androidutils')
 }
