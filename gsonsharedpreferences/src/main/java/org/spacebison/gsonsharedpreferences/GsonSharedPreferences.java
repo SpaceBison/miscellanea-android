@@ -1,4 +1,4 @@
-package org.spacebison.androidutils;
+package org.spacebison.gsonsharedpreferences;
 
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
