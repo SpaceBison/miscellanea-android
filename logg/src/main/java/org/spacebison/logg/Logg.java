@@ -10,9 +10,6 @@ import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
 
-/**
- * Created by cmb on 24.04.16.
- */
 public class Logg {
     /**
      * Send a {@link Log#VERBOSE} log message.
