@@ -1,1 +1,1 @@
-include ':app', ':statefulmediaplayer', ':progressviewcontroller', ':permissionrequestactivity', ':locationtest', ':persistentalarmmanager', ':androidutils'
+include ':app', ':statefulmediaplayer', ':progressviewcontroller', ':permissionrequestactivity', ':locationtest', ':persistentalarmmanager', ':androidutils', ':logg'
